@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ConnectAny</string>
+    <string name="usetname">请输入用户名，必须和其他设备相同</string>
+    <string name="deviceId">请输入本机设备Id, 必须和其他设备不同</string>
+    <string name="title_activity_test">TestActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>

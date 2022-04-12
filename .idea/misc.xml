@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/divider_black.xml" value="0.3265" />
+        <entry key="app/src/main/res/layout/acitivty_select_device.xml" value="0.3582427536231884" />
+        <entry key="app/src/main/res/layout/activity_device_list.xml" value="0.3582427536231884" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.5661458333333333" />
+        <entry key="app/src/main/res/layout/activity_select_app.xml" value="0.36875" />
+        <entry key="app/src/main/res/layout/activity_select_device.xml" value="0.3582427536231884" />
+        <entry key="app/src/main/res/layout/activity_send_message.xml" value="0.3582427536231884" />
+        <entry key="app/src/main/res/layout/activity_sign.xml" value="0.3223958333333333" />
+        <entry key="app/src/main/res/layout/activity_test.xml" value="0.8646895273401297" />
+        <entry key="app/src/main/res/layout/activity_test2.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/content_test.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/device_list.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/simple_list_item.xml" value="0.3740942028985507" />
+        <entry key="app/src/main/res/layout/text_row_itme.xml" value="0.3740942028985507" />
+        <entry key="app/src/main/res/xml/aservice.xml" value="0.5661458333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
