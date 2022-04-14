@@ -39,7 +39,7 @@ class ConnectService: Service() {
     private var deviceId: String = ""
     private var userName: String = ""
 
-    private val executorService = Executors.newFixedThreadPool(25)
+    private val executorService = Executors.newFixedThreadPool(127)
     private var onDeviceSearchListener: OnDeviceSearchListener? = null
     private val onDeviceListener = object : OnDeviceSearchListener {
         override fun onFindHostIp(ip: MutableList<String>) {
@@ -295,23 +295,15 @@ class ConnectService: Service() {
     fun findDevice() {
         executorService.execute {
             val localIp = HttpUtils().getIpAddress(this)
-            executorService.execute {
-                Thread.sleep(1000)
-                val hosts = HttpUtils().scanIp(localIp, 2, 5)
-                Log.w("Info", "Start print hosts")
-                hostIp.addAll(hosts)
-                finishNum++
-            }
-            var start = 5
+            var start = 2
             val startArray: MutableList<Int> = mutableListOf()
-            for (index in 1..24) {
+            for (index in 1..126) {
                 startArray.add(start)
-                start += 10
+                start += 2
             }
             for (index in startArray) {
                 executorService.execute {
-                    Thread.sleep(1000)
-                    val hosts = HttpUtils().scanIp(localIp, index, index + 10)
+                    val hosts = HttpUtils().scanIp(localIp, index, index + 1)
                     Log.w("Info", "Start print hosts")
                     hostIp.addAll(hosts)
                     finishNum++
@@ -320,7 +312,7 @@ class ConnectService: Service() {
             findStart = true
             executorService.execute {
                 while (findStart) {
-                    if (finishNum == 25) {
+                    if (finishNum == 126) {
                         this.onDeviceSearchListener?.onFindHostIp(hostIp)
                         this.onDeviceListener.onFindHostIp(hostIp)
                         findStart = false

@@ -17,11 +17,15 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okio.BufferedSink
 import okio.ByteString.Companion.encode
 import okio.ByteString.Companion.encodeUtf8
+import java.util.concurrent.TimeUnit
+import kotlin.time.toDuration
 
 class HttpUtils {
     private val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
-    private fun httpGet(url: String): String? {
-        val client = OkHttpClient.Builder().build()
+    private fun httpGet(url: String, timeout: Long = 1000): String? {
+        val client = OkHttpClient.Builder()
+            .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+            .build()
         val request = Request.Builder().url(url).build()
         val response = client.newCall(request).execute()
         return response.body?.string()
