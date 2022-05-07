@@ -13,7 +13,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import okhttp3.internal.assertThreadDoesntHoldLock
 import java.util.concurrent.Executors
 
 class BackAccessibilityService : AccessibilityService() {

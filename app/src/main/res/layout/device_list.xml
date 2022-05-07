@@ -7,19 +7,29 @@
     android:showDividers="middle">
     <TextView
         android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:text="1"/>
     <TextView
         android:id="@+id/ip"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:text="2"
+        />
     <TextView
         android:id="@+id/live"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:text="3"
+        />
 
 </LinearLayout>

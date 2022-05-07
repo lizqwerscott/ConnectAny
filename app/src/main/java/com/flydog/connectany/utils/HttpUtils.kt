@@ -31,8 +31,10 @@ class HttpUtils {
         return response.body?.string()
     }
 
-    private fun httpPost(url: String, data: String): String? {
-        val client = OkHttpClient.Builder().build()
+    private fun httpPost(url: String, data: String, timeout: Long = 1000): String? {
+        val client = OkHttpClient.Builder()
+            .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -134,7 +136,7 @@ class HttpUtils {
     fun sendLive(device: DeviceS, userName: String): Boolean {
         val url = "http://${device.hostIp}:7677/live?name=$userName&id=${device.deviceId}"
         val str = try {
-            httpGet(url).toString()
+            httpGet(url, 2000).toString()
         } catch (e: Exception) {
             ""
         }
@@ -154,7 +156,7 @@ class HttpUtils {
         val data = Json.`object`().add("device", deviceId).add("type", type).add("data", message).toString()
         Log.w("info", "url: $url, data: $data")
         val str = try {
-            httpPost(url, data).toString()
+            httpPost(url, data, 2000).toString()
         } catch (e: Exception) {
             ""
         }

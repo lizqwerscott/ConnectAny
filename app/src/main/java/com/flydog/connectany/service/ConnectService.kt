@@ -98,7 +98,7 @@ class ConnectService: Service() {
             }
             get("/live") {
                 val json = Json.`object`().add("device", deviceId).add("name", userName).toString()
-                //Log.w("info", "live: " + call.request.uri)
+                Log.w("info", "relive: " + call.request.uri)
                 call.respondText(json)
                 //call.respond(mapOf("device" to deviceId, "name" to userName).toString())
             }
@@ -286,7 +286,7 @@ class ConnectService: Service() {
                         this.onDeviceSearchListener?.onDeviceLiveRefersh(this.devices)
                     }
                 }
-                Thread.sleep(1000)
+                Thread.sleep(5000)
             }
         }
 
@@ -312,7 +312,7 @@ class ConnectService: Service() {
             findStart = true
             executorService.execute {
                 while (findStart) {
-                    if (finishNum == 126) {
+                    if (finishNum >= 124) {
                         this.onDeviceSearchListener?.onFindHostIp(hostIp)
                         this.onDeviceListener.onFindHostIp(hostIp)
                         findStart = false

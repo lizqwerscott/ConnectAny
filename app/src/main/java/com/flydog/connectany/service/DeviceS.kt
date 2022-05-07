@@ -1,7 +1,6 @@
 package com.flydog.connectany.service
 
 import android.util.Log
-import androidx.core.util.LogWriter
 import com.flydog.connectany.utils.HttpUtils
 
 class DeviceS constructor(id: String, ip: String, p: Boolean = true) {
