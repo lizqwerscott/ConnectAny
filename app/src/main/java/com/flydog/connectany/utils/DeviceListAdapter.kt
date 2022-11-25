@@ -51,8 +51,14 @@ class DeviceListAdapter(private val dataSet: List<DeviceS>, private val clickLis
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = dataSet[position]
         holder.id.text = device.deviceId
-        holder.ip.text = device.hostIp
-        holder.live.text = device.livep.toString()
+        holder.ip.text = device.getAllIp()
+        var liveText = ""
+        if (device.livep) {
+            liveText = "Live"
+        } else {
+            liveText = "Dead"
+        }
+        holder.live.text = liveText
     }
 
     override fun getItemCount(): Int {

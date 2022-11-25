@@ -76,7 +76,7 @@ class ConnectService: Service() {
                 parameterData.forEach {
                     Log.w("info", "connect(call str): " + it.key + ", " + it.value[0])
                 }
-                val ip = call.request.origin.host
+                val ip = call.request.origin.remoteHost
                 val name = parameterData["name"]?.get(0)
                 val id = parameterData["id"]?.get(0)
 
@@ -206,9 +206,9 @@ class ConnectService: Service() {
         val notification = createForegroundNotification()
         startForeground(1, notification)
         loadDevice()
-        findDevice()
-        deviceLivep()
         this.startService()
+        deviceLivep()
+        findDevice()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -227,10 +227,14 @@ class ConnectService: Service() {
             val data = Json.parse(json).asArray()
             data.forEach {
                 val id = it.asObject().getString("id", "-1")
-                val ip = it.asObject().getString("ip", "-1")
-                if (id != "-1" && ip != "-1") {
-                    Log.w("Info", "load devices: $id $ip")
-                    addDevice(ip, id)
+                var ipsArray = it.asObject().get("ips").asArray()
+                val ips: MutableList<DeviceS.HostIp> = mutableListOf()
+                ipsArray.forEach {
+                    ips.add(DeviceS.HostIp(it.asString(), false))
+                }
+                if (ips.size != 0 && id != "-1") {
+                    Log.w("Info", "load devices: $id $ips")
+                    addDevice(ips, id)
                 }
             }
         }
@@ -242,7 +246,11 @@ class ConnectService: Service() {
             val device = it.value
             val deviceObject = Json.`object`()
             deviceObject.add("id", device.deviceId)
-            deviceObject.add("ip", device.hostIp)
+            val ipsArray = Json.array()
+            for (ips in device.hostIps) {
+                ipsArray.add(ips.hostIp)
+            }
+            deviceObject.add("ips", ipsArray)
             deviceObject.add("livep", device.livep)
             data.add(deviceObject)
         }
@@ -254,21 +262,40 @@ class ConnectService: Service() {
     }
 
     private fun addDevice(ip: String, id: String) {
-        if (this.devices.containsKey(ip)) {
+        if (this.devices.containsKey(id)) {
+            val device = this.devices[id]
+            device?.addIp(ip)
             Log.w("info", "already in devices")
         } else {
-            val device = DeviceS(id, ip)
+            val ips: MutableList<DeviceS.HostIp> = mutableListOf()
+            ips.add(DeviceS.HostIp(ip, true))
+            val device = DeviceS(id, ips)
             this.devices[ip] = device
             this.onDeviceListener.onDeviceListRefersh(devices)
             this.onDeviceSearchListener?.onDeviceListRefersh(devices)
         }
     }
 
-    private fun addDevice(device: DeviceS) {
-        if (this.devices.containsKey(device.hostIp)) {
-            Log.w("info", "already in devices")
+    private fun addDevice(ips: MutableList<DeviceS.HostIp>, id: String) {
+        if (this.devices.containsKey(id)) {
+            val device = this.devices[id]
+            device?.addHostIps(ips)
+            Log.w("info", "${deviceId}already in devices")
         } else {
-            this.devices[device.hostIp] = device
+            val device = DeviceS(id, ips)
+            this.devices[id] = device
+            this.onDeviceListener.onDeviceListRefersh(devices)
+            this.onDeviceSearchListener?.onDeviceListRefersh(devices)
+        }
+    }
+
+    private fun addDevice(device: DeviceS) {
+        if (this.devices.containsKey(device.deviceId)) {
+            val lastDevice = this.devices[device.deviceId]
+            lastDevice?.addHostIps(device.hostIps)
+            Log.w("info", "${deviceId}already in devices")
+        } else {
+            this.devices[device.deviceId] = device
             this.onDeviceListener.onDeviceListRefersh(devices)
             this.onDeviceSearchListener?.onDeviceListRefersh(devices)
         }
@@ -280,7 +307,7 @@ class ConnectService: Service() {
                 this.devices.forEach {
                     val device = it.value
                     val live = device.livep
-                    val result = device.isLive(userName)
+                    val result = device.isLive(deviceId, userName)
                     if (live != result) {
                         this.onDeviceListener.onDeviceLiveRefersh(this.devices)
                         this.onDeviceSearchListener?.onDeviceLiveRefersh(this.devices)
@@ -386,7 +413,7 @@ class ConnectService: Service() {
                 if (message.contains("http://") || message.contains("https://")) {
                     type = "url"
                 }
-                HttpUtils().sendMessage(device, this.deviceId, type, message)
+                HttpUtils().sendMessage(device.getLiveIp(), this.deviceId, type, message)
                 Log.w("info", "send message")
             } else {
                 Log.w("info", "can't find device")

@@ -127,14 +127,16 @@ class HttpUtils {
         var result: DeviceS? = null
         if (!anotherId.equals("-1") && !anotherName.equals("-1")) {
             if (anotherName.equals(userName)) {
-                result = DeviceS(anotherId, ip)
+                val ips: MutableList<DeviceS.HostIp> = mutableListOf()
+                ips.add(DeviceS.HostIp(ip))
+                result = DeviceS(anotherId, ips)
             }
         }
         return result
     }
 
-    fun sendLive(device: DeviceS, userName: String): Boolean {
-        val url = "http://${device.hostIp}:7677/live?name=$userName&id=${device.deviceId}"
+    fun sendLive(ip: String, anotherDeviceID: String, deviceId: String, userName: String): Boolean {
+        val url = "http://${ip}:7677/live?name=$userName&id=${deviceId}"
         val str = try {
             httpGet(url, 2000).toString()
         } catch (e: Exception) {
@@ -148,11 +150,11 @@ class HttpUtils {
         val anotherName = json.getString("name", "-1")
         val anotherId = json.getString("device", "-1")
 
-        return anotherName == userName && anotherId == device.deviceId
+        return anotherName == userName && anotherId == anotherDeviceID
     }
 
-    fun sendMessage(device: DeviceS, deviceId: String, type: String, message: String): Boolean {
-        val url = "http://${device.hostIp}:7677/recive"
+    fun sendMessage(ip: String, deviceId: String, type: String, message: String): Boolean {
+        val url = "http://${ip}:7677/recive"
         val data = Json.`object`().add("device", deviceId).add("type", type).add("data", message).toString()
         Log.w("info", "url: $url, data: $data")
         val str = try {
